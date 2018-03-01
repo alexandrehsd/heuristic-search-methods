@@ -1,4 +1,4 @@
-This repository contain AI algorithms developed in the course of Applied Artificial Intelligence from the Federal University of Rio Grande Do Norte.
+This repository contains AI algorithms developed in the course of Applied Artificial Intelligence from the B.Sc. Computer Engineering at Federal University of Rio Grande Do Norte.
 
 I sincerely thank Gabriel Medeiros, Josué Oliveira and Lucas Lyon for their precious contribution on the codes developed here.
 
