@@ -1,22 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 import java.util.Random;
-/**
- *
- * @author alexandre
- */
+
+/*
+This class declares and manage the properties of the particles, more specifically,
+their position, velocity and best position reached at an instant t.
+*/
+
 public class Particle {
+    //Intrinsec variables of each particle
     private double[] position = new double[2];
     private double[] velocity = new double[2];
-    
+    private double[] pbest = new double[2];
+    /*
+    These variables defines the range from which the particles
+    can be randomly created in the plane x,y.
+    */
     private static int RangeMin;
     private static int RangeMax;
     
-    private double[] pbest = new double[2];
-    
+    //Constructor of particles
     public Particle(){
         Random rand = new Random();
         for(int i=0;i<2;i++){
@@ -25,20 +27,27 @@ public class Particle {
             this.pbest[i] = this.position[i];
         }
     }
-
+    
+    //Getter for the particle's position and velocity
     public double[] getPosition() {
         return position;
-    }
-
-    public void setPosition() {
-        this.position[0] = this.position[0] + this.velocity[0];
-        this.position[1] = this.position[1] + this.velocity[1];
     }
 
     public double[] getVelocity() {
         return velocity;
     }
+    
+    //Setter for the particle's position based in the equation pos(n+1) = pos(n) + vel(n)
+    public void setPosition() {
+        this.position[0] = this.position[0] + this.velocity[0];
+        this.position[1] = this.position[1] + this.velocity[1];
+    }
 
+    /*
+    Setter for the particle's velocity. Reminder: for each dimension,
+    v(n+1) = w*v(n) + C1*Ro1*(pbest(n) - position(n)) + C2*Ro2*(Gbest(n) - position(n)),
+    where Ro1 and Ro2 are randomly generated for each particle iteration.
+    */
     public void setVelocity() {
         Random rand = new Random();
         for(int i=0;i<2;i++){
@@ -50,6 +59,7 @@ public class Particle {
         }
     }
 
+    //Setters and Getters for Pbest, RangeMin and RangeMax
     public double[] getPbest() {
         return pbest;
     }

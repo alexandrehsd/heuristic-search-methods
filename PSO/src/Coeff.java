@@ -1,18 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author alexandre
- */
+/*
+*This class is responsible to manage the coefficients C1, C2, Ro1, Ro2 and w in the equation
+    v(n+1) = w*v(n) + C1*Ro1*(pbest(n) - position(n)) + C2*Ro2*(Gbest(n) - position(n))
+Reminder: This equation is applied in all dimensions.
+
+where:
+C1 is the acceleration constant for the cognitive component
+C2 is the acceleration constant for the social component
+Ro1 and Ro2 are the stochastic components of the algorithm, e. g., a random value in the interval [0,1]
+w is the inertial coefficient
+*/
 public class Coeff {
+    //Declaring all coeffs as class' variables
     private static double C1, C2;
     private static double w;
     private static double ro1, ro2;
 
+    //Setters and getters
     public static double getC1() {
         return C1;
     }
