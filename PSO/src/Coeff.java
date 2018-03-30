@@ -10,7 +10,7 @@ C2 is the acceleration constant for the social component
 Ro1 and Ro2 are the stochastic components of the algorithm, e. g., a random value in the interval [0,1]
 w is the inertial coefficient
 */
-public class Coeff {
+public final class Coeff {
     //Declaring all coeffs as class' variables
     private static double C1, C2;
     private static double w;
