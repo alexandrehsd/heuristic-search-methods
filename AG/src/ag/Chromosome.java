@@ -87,6 +87,7 @@ public class Chromosome {
             Chromosome.Cp = 1.25;
         }
     }
+    
     //Método destinado à função de avaliação -> não implementado
     public double fitness(){
         double d, h, r, p;
