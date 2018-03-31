@@ -6,6 +6,7 @@ public class Chromosome {
     private int[] GenCode = new int[12];
     private double fitness;
     
+    //Inicializando os cromossomos como um vetor de bits randômicos
     Chromosome(){
         Random rand = new Random();
         for(int i = 0; i<12; i++){
@@ -13,8 +14,10 @@ public class Chromosome {
         }
     }
     
+    //Método destinado à função de avaliação -> não implementado
     public double fitness(){
-        return 0;
+        Random rand = new Random();
+        return rand.nextInt(11);
     }
     
     //Configura um bit no código genético -> Mutação

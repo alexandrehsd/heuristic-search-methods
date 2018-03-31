@@ -1,5 +1,4 @@
 import static java.lang.Math.pow;
-import static java.lang.Math.cos;
 /*
 This class is responsible to evaluate the current particles' positions and 
 manage the global best value reached by the nth particle at an instant t.

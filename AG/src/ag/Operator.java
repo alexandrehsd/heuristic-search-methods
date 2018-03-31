@@ -7,24 +7,35 @@ public final class Operator {
     
     //Seleção para crossover -> Torneio
     public static Chromosome[] selection(Chromosome pop[], int k){
-        //Supondo que sempre serão selecionados 14/20 indivíduos
-        k = pop.length-2;
+        //Supondo que sempre serão selecionados 18/20 indivíduos, temos que
+        //k = pop.length-2 deve ter sempre esse valor.
+        
         //Ordenação em ordem crescente de fitness do vetor de população
         Sort.BubbleSort(pop);
         
         //Iniciando o torneio
         Random rand = new Random();
+        
+        //vetor de guardará os cromossomos selecionados
         Chromosome[] selected = new Chromosome[k];
+        
+        //Índices dos cromossomos do vetor da população que serão utilizados
+        //para o torneio
         int crom1, crom2, crom3;
+        
+        //Variáveis que vão guardar os valores de fitness dos lutadores
         double f1, f2, f3;
         for(int i=0;i<pop.length-2;i++){
+            //Gerando um índice aleatório de 0 a 17
             crom1 = rand.nextInt(18);
             crom2 = rand.nextInt(18);
             crom3 = rand.nextInt(18);
+            //atribuindo o valor de fitness de cada lutador
             f1 = pop[crom1].fitness();
             f2 = pop[crom2].fitness();
             f3 = pop[crom3].fitness();
             
+            //Atribuindo o vencedor à posição i do vetor de selected
             if(f1 >= f2 && f1 >= f3){
                 selected[i] = pop[crom1];
             } else if (f2 >= f1 && f2 >= f3) {
@@ -37,6 +48,8 @@ public final class Operator {
         return selected;
     }
     
+    //Este método é responsável por aplicar uma mutação a um cromossomo A
+    //selecionando um bit aleatório do seu gene e invertendo seu valor
     public static Chromosome mutation(Chromosome A){
         Random rand = new Random();
         int index = rand.nextInt(12);
@@ -48,13 +61,24 @@ public final class Operator {
         return A;   
     }
     
+    //Este método é responsável pelo cruzamento entre os indivíduos selecionados
+    //Inicialmente, os indivíduos são escolhidos pelo método selection
     public static Chromosome[] crossover(Chromosome selected[]){
         
+        //Vetor de cromossomos auxiliar que vai guardar os novos indivíduos gerados
         Chromosome sons[] = new Chromosome[selected.length];
+        //Inicializando cada índice do vetor
         for(int i=0;i<selected.length;i++){
             sons[i] = new Chromosome();
         }
         
+        //O cruzamento é feito aos pares, entre os indivíduos,
+        //por exemplo, individuo 0 com individuo 1, individuo 2 com
+        //o individuo 3 e assim por diante...
+        
+        //O cruzamento toma a forma
+        //[001010110101] x [011101100001] pais
+        //[001110100001] x [011001110101] filhos
         for(int i=0;i<selected.length; i=i+2){
             //Cruzando os bits responsáveis pela distância [0,3]
             sons[i].setBits(0, 1, selected[i].getBits(0, 1));
