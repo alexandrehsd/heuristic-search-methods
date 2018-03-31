@@ -13,7 +13,7 @@ public class Chromosome {
             this.GenCode[i] = rand.nextInt(2);
         }
     }
-    
+     
     //Método destinado à função de avaliação -> não implementado
     public double fitness(){
         Random rand = new Random();

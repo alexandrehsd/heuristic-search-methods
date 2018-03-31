@@ -17,7 +17,7 @@ public class AG {
         //vetores auxiliares para seleção e crossover
         Chromosome[] selected;
         Chromosome[] sons;
-        
+         
         //ordenando a população para definir quem são os 2 melhores indivíduos
         //que passarão para a próxima geração
         Sort.BubbleSort(pop);

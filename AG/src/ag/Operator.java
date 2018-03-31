@@ -9,7 +9,7 @@ public final class Operator {
     public static Chromosome[] selection(Chromosome pop[], int k){
         //Supondo que sempre serão selecionados 18/20 indivíduos, temos que
         //k = pop.length-2 deve ter sempre esse valor.
-        
+         
         //Ordenação em ordem crescente de fitness do vetor de população
         Sort.BubbleSort(pop);
         
