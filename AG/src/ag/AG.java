@@ -14,7 +14,10 @@ import org.json.JSONException;
 //18 não tem rating
 public class AG {
     public static void main(String[] args) throws IOException, MalformedURLException, JSONException {
-        GymBuilder.Gyms();
+        String addr = "419+Rua+Mipibu";
+        String lat = "-5.8158596";
+        String lng = "-35.2091204";
+        System.out.println(GymBuilder.distance(lat, lng, addr));
 //        System.out.printf("Descreva com um inteiro de 1 a 5 o quanto você leva em conta\nas avaliações "
 //                + "dadas pelos outros usuários sobre as academias: ");
 //        
