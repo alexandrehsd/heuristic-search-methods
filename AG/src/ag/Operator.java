@@ -52,7 +52,7 @@ public final class Operator {
     //selecionando um bit aleatório do seu gene e invertendo seu valor
     public static Chromosome mutation(Chromosome A){
         Random rand = new Random();
-        int index = rand.nextInt(12);
+        int index = rand.nextInt(14);
         if(A.getBit(index) == 0){
             A.setBit(index, 1);
         } else {
@@ -95,18 +95,18 @@ public final class Operator {
             sons[i+1].setBits(6, 7, selected[i].getBits(6, 7));
 
             //Cruzando os bits responsáveis pelo preço [8,9]
-            sons[i].setBit(8, selected[i].getBit(8));
-            sons[i+1].setBit(8, selected[i+1].getBit(8));
+            sons[i].setBits(8, 11, selected[i].getBits(8, 11));
+            sons[i+1].setBits(8, 11, selected[i+1].getBits(8, 11));
 
-            sons[i].setBit(9, selected[i+1].getBit(9));
-            sons[i+1].setBit(9, selected[i].getBit(9));
+            sons[i].setBits(8, 11, selected[i+1].getBits(8, 11));
+            sons[i+1].setBits(8, 11, selected[i].getBits(8, 11));
 
             //Cruzando os bits responsáveis pelo horário de funcionamento [10,11]
-            sons[i].setBit(10, selected[i].getBit(10));
-            sons[i+1].setBit(10, selected[i+1].getBit(10));
+            sons[i].setBit(12, selected[i].getBit(12));
+            sons[i+1].setBit(12, selected[i+1].getBit(12));
 
-            sons[i].setBit(11, selected[i+1].getBit(11));
-            sons[i+1].setBit(11, selected[i].getBit(11));
+            sons[i].setBit(13, selected[i+1].getBit(13));
+            sons[i+1].setBit(13, selected[i].getBit(13));
         }
         
         return sons;

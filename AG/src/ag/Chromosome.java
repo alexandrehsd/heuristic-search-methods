@@ -5,19 +5,20 @@ import java.util.Random;
 import static java.lang.Math.pow;
 
 public class Chromosome {
-    private int[] GenCode = new int[12];
+    private int[] GenCode = new int[14];
     private double fitness;
     
     //Variável da classe, não vinculadas a nenhum cromossomo em particular
     //Constantes definidas com base na entrada do usuário
-    private static double Cr=1, Cp=1;
+    private static double Cr=1.5, Cp=2;
     
     //Inicializando os cromossomos como um vetor de bits randômicos
     Chromosome(){
         Random rand = new Random();
-        for(int i = 0; i<12; i++){
+        for(int i = 0; i<14; i++){
             this.GenCode[i] = rand.nextInt(2);
         }
+        this.fitness = this.fitness();
     }
     
     //Configura um bit no código genético -> Mutação
@@ -78,12 +79,12 @@ public class Chromosome {
         }
     }
     
-    public static void setCp(int maxp, int minp){
-        if (maxp - minp < 50 && maxp < 120){
+    public static void setCp(int maxp){
+        if (maxp < 120){
             Chromosome.Cp = 2.5;
-        } else if (maxp - minp >= 50 && maxp < 250){
-            Chromosome.Cp = 1.5;
-        } else if (maxp >= 250){
+        } else if (maxp < 250){
+            Chromosome.Cp = 2;
+        } else {
             Chromosome.Cp = 1.25;
         }
     }
@@ -91,16 +92,16 @@ public class Chromosome {
     //Método destinado à função de avaliação -> não implementado
     public double fitness(){
         double d, h, r, p;
-        //the gencode has a form [ddddrrrrpphh]
+        //the gencode has a form [ddddrrrrpppphh]
         //d stands for distance, r for rate, p for price and h for hour.
         
         d = this.setd(this.getBits(0, 3));
         r = this.setr(this.getBits(4, 7));
-        p = this.setp(this.getBits(8, 9));
-        h = this.seth(this.getBits(10, 11));
+        p = this.setp(this.getBits(8, 11));
+        h = this.seth(this.getBits(12, 13));
         
         double value;
-        value = 7/pow(d,0.75) + pow(h,2) +Chromosome.Cr*pow(r,1.5) + Chromosome.Cp*10/p;
+        value = 7/pow(d,0.75) + 2*pow(h,2) + Chromosome.Cr*pow(r,1.5) + Chromosome.Cp*2/p;
         return value;
     }
     
@@ -221,15 +222,52 @@ public class Chromosome {
     public double setp(int bits[]){
         double p=1;
         switch(Arrays.toString(bits).replaceAll("\\[|\\]|,|\\s", "")){
-            case "00": p = 1.3;
+            case "0000":
+                p = 0.25;
                 break;
-            case "01":
-                p = 1.7;
+            case "0001":
+                p = 0.5;
                 break;
-            case "10":
+            case "0010":
+                p = 0.75;
+                break;
+            case "0011":
+                p = 1.0;
+                break;
+            case "0100":
+                p = 1.25;
+                break;
+            case "0101":
+                p = 1.50;
+                break;
+            case "0110":
+                p = 1.75;
+                break;
+            case "0111":
                 p = 2.0;
                 break;
-            case "11":
+            case "1000":
+                p = 2.25;
+                break;
+            case "1001":
+                p = 2.50;
+                break;
+            case "1010":
+                p = 2.75;
+                break;
+            case "1011":
+                p = 3.0;
+                break;
+            case "1100":
+                p = 3.25;
+                break;
+            case "1101":
+                p = 3.50;
+                break;
+            case "1110":
+                p = 3.75;
+                break;
+            case "1111":
                 p = 4.0;
                 break;
             default:
@@ -241,7 +279,7 @@ public class Chromosome {
         double h=1;
         switch(Arrays.toString(bits).replaceAll("\\[|\\]|,|\\s", "")){
             case "00":
-                h = 0.5;
+                h = 4.0;
                 break;
             case "01":
                 h = 2.0;
