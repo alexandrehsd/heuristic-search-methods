@@ -68,10 +68,6 @@ public class GymBuilder {
         i++;
             System.out.println(i);
         }
-        for(int j=0;j<database.length;j++){
-            database[j].show();
-            database[j].setFitness();
-        }
     }
     
     public static int distance(String lat, String lng, String address) throws MalformedURLException, IOException, JSONException{
