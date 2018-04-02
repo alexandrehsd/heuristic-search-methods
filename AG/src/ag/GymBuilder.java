@@ -66,7 +66,6 @@ public class GymBuilder {
             //padronizando a string s;
             s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCLXOfMvJKX6yHVhzXSy1CAFenLjVO6Pfc&placeid=";
         i++;
-            System.out.println(i);
         }
     }
     
