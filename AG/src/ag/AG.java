@@ -20,22 +20,27 @@ public class AG {
         Chromosome[] elites = new Chromosome[2];
         Chromosome[] database = new Chromosome[131];
         
-        System.arraycopy(GymBuilder.Gyms("Rua Alexandrino de Alencar, 1618", "18h00","22h00" , "13h00", "15h00"),
+        Chromosome.setCp(150);
+        Chromosome.setCr(5);
+        System.arraycopy(GymBuilder.Gyms("Rua Mipibu, 419", "15h00","20h00" , "13h00", "15h00"),
                 0, database, 0, 131);
         
         // GERANDO A POPULAÇÃO INICIAL ALEATORIAMENTE
         for(int i=0; i<20; i++){
             pop[i] = new Chromosome();
         }
+        
         int it=0;
         while(it<50){
             // REALIZANDO O CRUZAMENTO E PRODUZINDO FILHOS
-            System.arraycopy(Operator.crossover(Operator.selection(pop)), 0, sons, 0, 18); 
+            System.arraycopy(Operator.crossover(Operator.selection(pop)), 0, sons, 0, 18);
 
+            System.out.println("");
             for (int i=0;i<sons.length;i++){
                 sons[i] = Operator.validate(sons[i], database);
                 sons[i].setFitness();
             }
+
             // OPERAÇÃO DE ELITISMO
             Sort.BubbleSort(pop); // Ordena o vetor de população antiga de modo que os E indivíduos com maior fitness fiquem no final do vetor
             // REALIZANDO MUTAÇÃO
@@ -52,10 +57,16 @@ public class AG {
         pop[19].show();
         pop[18].show();
         pop[17].show();
+        System.out.println(pop[19].getFitness());
+        System.out.println(pop[18].getFitness());
+        System.out.println(pop[17].getFitness());
         pop[0].show();
         pop[1].show();
         pop[2].show();
-//        int[] IdIndex = new int[3];
+        System.out.println(pop[0].getFitness());
+        System.out.println(pop[1].getFitness());
+        System.out.println(pop[2].getFitness());
+////        int[] IdIndex = new int[3];
 //        for(int i=17;i<20;i++){
 //            for(int j=0;j<131;j++){
 //                if(Arrays.equals(pop[i].getGenCode(), database[j].getGenCode())){

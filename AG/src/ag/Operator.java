@@ -10,6 +10,40 @@ public final class Operator {
     
     //Seleção para crossover -> Torneio
     public static Chromosome[] selection(Chromosome pop[]){
+        double soma =0;
+        Chromosome[] selected = new Chromosome[pop.length-2];
+        for (int i = 0; i < selected.length; i++) {
+            selected[i] = new Chromosome();
+        }
+        
+        for(int i=0;i<pop.length; i++){
+            soma += pop[i].getFitness();
+        }
+        
+        double[] aux = new double[pop.length];
+        
+        for(int i=0;i<pop.length; i++){
+            aux[i] = 1000*pop[i].getFitness()/soma;
+        }
+        
+        Random generator = new Random();
+        
+        int k = pop.length-2;
+        for(int i=0;i<k; i++){
+            int pos = 0;
+            int aleatorio = generator.nextInt(1000);
+            double somaAux = 0;
+            while(somaAux <= aleatorio){
+                somaAux += aux[pos];
+                pos++;
+            }
+            pos--;
+            selected[i] = pop[pos];
+            
+        }
+        return selected;
+
+        
         //Supondo que sempre serão selecionados 18/20 indivíduos, temos que
         //k = pop.length-2 deve ter sempre esse valor.
          
@@ -17,38 +51,38 @@ public final class Operator {
         //Sort.BubbleSort(pop);
         
         //Iniciando o torneio
-        Random rand = new Random();
-        
-        //vetor de guardará os cromossomos selecionados
-        Chromosome[] selected = new Chromosome[pop.length-2];
-        
-        //Índices dos cromossomos do vetor da população que serão utilizados
-        //para o torneio
-        int crom1, crom2, crom3;
-        
-        //Variáveis que vão guardar os valores de fitness dos lutadores
-        double f1, f2, f3;
-        for(int i=0;i<pop.length-2;i++){
-            //Gerando um índice aleatório de 0 a 19
-            crom1 = rand.nextInt(20);
-            crom2 = rand.nextInt(20);
-            crom3 = rand.nextInt(20);
-            //atribuindo o valor de fitness de cada lutador
-            f1 = pop[crom1].getFitness();
-            f2 = pop[crom2].getFitness();
-            f3 = pop[crom3].getFitness();
-            
-            //Atribuindo o vencedor à posição i do vetor de selected
-            if(f1 >= f2 && f1 >= f3){
-                selected[i] = pop[crom1];
-            } else if (f2 >= f1 && f2 >= f3) {
-                selected[i] = pop[crom2];
-            } else if (f3 >= f1 && f3 >= f2){
-                selected[i] = pop[crom3];
-            }
-        }
-        
-        return selected;
+//        Random rand = new Random();
+//        
+//        //vetor de guardará os cromossomos selecionados
+//        Chromosome[] selected = new Chromosome[pop.length-2];
+//        
+//        //Índices dos cromossomos do vetor da população que serão utilizados
+//        //para o torneio
+//        int crom1, crom2, crom3;
+//        
+//        //Variáveis que vão guardar os valores de fitness dos lutadores
+//        double f1, f2, f3;
+//        for(int i=0;i<pop.length-2;i++){
+//            //Gerando um índice aleatório de 0 a 19
+//            crom1 = rand.nextInt(20);
+//            crom2 = rand.nextInt(20);
+//            crom3 = rand.nextInt(20);
+//            //atribuindo o valor de fitness de cada lutador
+//            f1 = pop[crom1].getFitness();
+//            f2 = pop[crom2].getFitness();
+//            f3 = pop[crom3].getFitness();
+//            
+//            //Atribuindo o vencedor à posição i do vetor de selected
+//            if(f1 >= f2 && f1 >= f3){
+//                selected[i] = pop[crom1];
+//            } else if (f2 >= f1 && f2 >= f3) {
+//                selected[i] = pop[crom2];
+//            } else if (f3 >= f1 && f3 >= f2){
+//                selected[i] = pop[crom3];
+//            }
+//        }
+//        
+//        return selected;
     }
     
     //Este método é responsável por aplicar uma mutação a um cromossomo A

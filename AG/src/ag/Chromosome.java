@@ -57,8 +57,8 @@ public final class Chromosome {
         System.out.println(Arrays.toString(this.GenCode).replaceAll("\\[|\\]|,|\\s", ""));
     }
     
-    public static void setCr(int rateweight){
-        switch(rateweight){
+    public static void setCr(int ratweight){
+        switch(ratweight){
             case 1:
                 Chromosome.Cr = 0.5;
                 break;

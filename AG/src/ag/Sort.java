@@ -6,13 +6,17 @@ public class Sort {
         Chromosome aux;
         for(int i=0; i<pop.length;i++){
             for(int j=0;j<pop.length;j++){
-                if(pop[j].getFitness() < pop[i].getFitness()){
+                if(pop[j].getFitness() > pop[i].getFitness()){
                     aux = pop[i];
                     pop[i] = pop[j];
                     pop[j] = aux;
                 }
             }
         }
+        for (int i = 0; i < pop.length; i++) {
+            System.out.println(pop[i].getFitness());
+        }
+        System.out.println("");
     }
     
     public static void QuickSort(Chromosome pop[], int inicio, int fim){
