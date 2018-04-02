@@ -31,9 +31,9 @@ public final class Operator {
             crom2 = rand.nextInt(20);
             crom3 = rand.nextInt(20);
             //atribuindo o valor de fitness de cada lutador
-            f1 = pop[crom1].fitness();
-            f2 = pop[crom2].fitness();
-            f3 = pop[crom3].fitness();
+            f1 = pop[crom1].getFitness();
+            f2 = pop[crom2].getFitness();
+            f3 = pop[crom3].getFitness();
             
             //Atribuindo o vencedor à posição i do vetor de selected
             if(f1 >= f2 && f1 >= f3){
@@ -107,6 +107,9 @@ public final class Operator {
 
             sons[i].setBit(13, selected[i+1].getBit(13));
             sons[i+1].setBit(13, selected[i].getBit(13));
+        }
+        for (int i=0;i<sons.length;i++){
+            sons[i].setFitness();
         }
         
         return sons;

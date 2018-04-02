@@ -20,6 +20,8 @@ public class AG {
 //        System.out.println(GymBuilder.distance(lat, lng, addr));
 //          GymBuilder.HourEncode("05h00", "20h00", "16h00", "19h00", "ChIJvexClv__sgcRXCamTA6EXJc");
 //          GymBuilder.DistEncode(1899);
+            
+          GymBuilder.Gyms("Rua Mipibu 419", "18h00", "21h00", "13h00", "17h00");
 //        System.out.printf("Descreva com um inteiro de 1 a 5 o quanto você leva em conta\nas avaliações "
 //                + "dadas pelos outros usuários sobre as academias: ");
 //        

@@ -6,7 +6,7 @@ public class Sort {
         Chromosome aux;
         for(int i=0; i<pop.length;i++){
             for(int j=0;j<pop.length;j++){
-                if(pop[j].fitness() < pop[i].fitness()){
+                if(pop[j].getFitness() < pop[i].getFitness()){
                     aux = pop[i];
                     pop[i] = pop[j];
                     pop[j] = aux;
@@ -27,9 +27,9 @@ public class Sort {
         Chromosome pivo = pop[inicio];
         int i = inicio + 1, f = fim;
         while (i <= f) {
-            if (pop[i].fitness() <= pivo.fitness())
+            if (pop[i].getFitness() <= pivo.getFitness())
                 i++;
-            else if (pivo.fitness() < pop[f].fitness())
+            else if (pivo.getFitness() < pop[f].getFitness())
                 f--;
             else {
                 Chromosome troca = pop[i];

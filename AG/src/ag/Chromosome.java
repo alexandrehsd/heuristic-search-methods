@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Random;
 import static java.lang.Math.pow;
 
-public class Chromosome {
+public final class Chromosome {
     private int[] GenCode = new int[14];
     private double fitness;
     
@@ -18,7 +18,7 @@ public class Chromosome {
         for(int i = 0; i<14; i++){
             this.GenCode[i] = rand.nextInt(2);
         }
-        this.fitness = this.fitness();
+        this.setFitness();
     }
     
     //Configura um bit no código genético -> Mutação
@@ -90,7 +90,7 @@ public class Chromosome {
     }
     
     //Método destinado à função de avaliação -> não implementado
-    public double fitness(){
+    public void setFitness(){
         double d, h, r, p;
         //the gencode has a form [ddddrrrrpppphh]
         //d stands for distance, r for rate, p for price and h for hour.
@@ -100,11 +100,12 @@ public class Chromosome {
         p = this.setp(this.getBits(8, 11));
         h = this.seth(this.getBits(12, 13));
         
-        double value;
-        value = 7/pow(d,0.75) + 2*pow(h,2) + Chromosome.Cr*pow(r,1.5) + Chromosome.Cp*2/p;
-        return value;
+        this.fitness = 7/pow(d,0.75) + 2*pow(h,2) + Chromosome.Cr*pow(r,1.5) + Chromosome.Cp*2/p;
     }
     
+    public double getFitness(){
+        return this.fitness;
+    }
     public double setd(int bits[]){
         double d=2;
         switch(Arrays.toString(bits).replaceAll("\\[|\\]|,|\\s", "")){
