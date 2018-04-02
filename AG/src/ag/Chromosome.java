@@ -89,7 +89,6 @@ public final class Chromosome {
         }
     }
     
-    //Método destinado à função de avaliação -> não implementado
     public void setFitness(){
         double d, h, r, p;
         //the gencode has a form [ddddrrrrpppphh]

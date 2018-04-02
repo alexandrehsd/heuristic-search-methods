@@ -1,5 +1,8 @@
 package ag;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 
@@ -107,11 +110,62 @@ public final class Operator {
 
             sons[i].setBit(13, selected[i+1].getBit(13));
             sons[i+1].setBit(13, selected[i].getBit(13));
-        }
-        for (int i=0;i<sons.length;i++){
-            sons[i].setFitness();
-        }
-        
+        }   
         return sons;
+    }
+    
+    public static Chromosome validate(Chromosome son, Chromosome[] database){
+        int[] aux = new int[database.length];
+        for(int i=0; i<database.length; i++){
+            aux[i] = 0;
+            if(Arrays.equals(database[i].getBits(0, 3), son.getBits(0, 3))){
+                aux[i]+=5;
+            }
+            if(Arrays.equals(database[i].getBits(4, 7), son.getBits(4, 7))){
+                aux[i]+=1;
+            }
+            if(Arrays.equals(database[i].getBits(8, 11), son.getBits(8, 11))){
+                aux[i]+=3;
+            }
+            if(Arrays.equals(database[i].getBits(12, 13), son.getBits(12, 13))){
+                aux[i]+=7;
+            }
+        }
+        List<Integer> indexes3 = new ArrayList<>();
+        List<Integer> indexes2 = new ArrayList<>();
+        List<Integer> indexes1 = new ArrayList<>();
+        for(int i=0; i<database.length; i++){
+            if(aux[i]==16){
+                return database[i];
+            }else if(aux[i]==15 || aux[i]==13 || aux[i]==11 || aux[i]==9){
+                indexes3.add(i);
+            }else if(aux[i]==12 || aux[i]==10 || aux[i]==8 || aux[i]==6 || aux[i]==4){
+                indexes2.add(i);
+            }else if(aux[i]==5 || aux[i]==1 || aux[i]==3 || aux[i]==7){
+                indexes1.add(i);
+            }
+        }
+        Random rand = new Random();
+        int ind;
+        if(!(indexes3.isEmpty())){
+            // SORTEAR ALGUMA ACADEMIA COM 3 PARAMETROS
+            ind = rand.nextInt(indexes3.size());
+            son = database[indexes3.get(ind)];
+        }
+        else if(!(indexes2.isEmpty())){
+            // SORTEAR ALGUMA ACADEMIA COM 2 PARAMETROS
+            ind = rand.nextInt(indexes2.size());
+            son = database[indexes2.get(ind)];
+        }
+        else if(!(indexes1.isEmpty())){
+            // SORTEAR ALGUMA ACADEMIA COM 1 PARAMETRO
+            ind = rand.nextInt(indexes1.size());
+            son = database[indexes1.get(ind)];
+        } else{
+            int[] data = new int[]{1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};
+            son.setBits(0, 13, data);
+            son.setFitness();
+        }
+        return son;
     }
 }

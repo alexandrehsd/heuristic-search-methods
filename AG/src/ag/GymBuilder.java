@@ -16,10 +16,10 @@ import org.json.JSONObject;
 
 public class GymBuilder {
     
-    public static void Gyms(String addr, String minw, String maxw, String minwe, String maxwe) throws MalformedURLException, IOException, JSONException{
+    public static Chromosome[] Gyms(String addr, String minw, String maxw, String minwe, String maxwe) throws MalformedURLException, IOException, JSONException{
         //String[] placeids = new String[199];
         //String padrão para fazer o request dos placeids
-        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCLXOfMvJKX6yHVhzXSy1CAFenLjVO6Pfc&placeid=";
+        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=";
         
         //Leitura do arquivo placeid
         File f = new File("/home/alexandre/Documentos/GitHub/AI-Algorithms/AG/placeids.txt");
@@ -63,17 +63,19 @@ public class GymBuilder {
         
         database[i].setBits(8, 11, PriceCode());
         database[i].setBits(12, 13, HourEncode(minw, maxw, minwe, maxwe, readLine));
-            //padronizando a string s;
-            s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCLXOfMvJKX6yHVhzXSy1CAFenLjVO6Pfc&placeid=";
+        //padronizando a string s;
+        s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=";
         i++;
+            System.out.println(i);
         }
+        return database;
     }
     
     public static int distance(String lat, String lng, String address) throws MalformedURLException, IOException, JSONException{
         //String para request dos dados do endereço do usuário
         address = address.replace(" ", "+");
         String addr = "https://maps.googleapis.com/maps/api/geocode/json?"
-                + "key=AIzaSyCLXOfMvJKX6yHVhzXSy1CAFenLjVO6Pfc&address=" + address;
+                + "key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&address=" + address;
         //Criando uma URL a partir de addr
         URL url = new URL(addr);
         
@@ -101,7 +103,7 @@ public class GymBuilder {
         
         //String de url para fazer o request dos dados entre a origem e o destino
         String geoinfo = "https://maps.googleapis.com/maps/api/distancematrix/json?"
-                + "mode=driving&key=AIzaSyCLXOfMvJKX6yHVhzXSy1CAFenLjVO6Pfc&"
+                + "mode=driving&key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&"
                 + "origins=" + origins + "&destinations=" + destinations;
         
         //Criando url output a partir de geoinfo
@@ -155,7 +157,7 @@ public class GymBuilder {
     }
     
     public static double Rating(String placeid) throws MalformedURLException, IOException, JSONException{
-        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCLXOfMvJKX6yHVhzXSy1CAFenLjVO6Pfc&placeid=";
+        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=";
         s += placeid;
         URL url = new URL(s);
             
@@ -246,7 +248,7 @@ public class GymBuilder {
         int hmaxwe = Integer.parseInt(maxwe);
         
         String s = "https://maps.googleapis.com/maps/api/place/details/json?"
-                + "key=AIzaSyCLXOfMvJKX6yHVhzXSy1CAFenLjVO6Pfc&placeid=" + placeid;            
+                + "key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=" + placeid;            
         //criando uma url com a string concatenada
         URL url = new URL(s);
             
