@@ -282,13 +282,13 @@ public class Chromosome {
                 h = 4.0;
                 break;
             case "01":
-                h = 2.0;
+                h = 3.0;
                 break;
             case "10":
-                h = 2.0;
+                h = 1.5;
                 break;
             case "11":
-                h = 4.0;
+                h = 0;
                 break;
             default:
                 System.out.println("Esta string de horário é inválida");

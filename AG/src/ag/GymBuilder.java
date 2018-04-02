@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Random;
 import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -122,4 +123,157 @@ public class GymBuilder {
         
         return distance;
     }
+    
+    public static String DistEncode(int dist){
+        int id=0;
+        int sum = 0;
+        while(sum < dist){
+            if(id/5 == 0){
+                sum += 300;
+            }else if(id/5 == 1){
+                sum += 500;
+            }else{
+                sum += 1000;
+            }
+            id++;
+        }        
+        StringBuilder binary = new StringBuilder();
+        binary.append(Integer.toBinaryString(id-1));
+        for(int n=binary.length(); n<4; n++) {
+              binary.insert(0, "0");
+        }
+        
+        return binary.toString();
+    }
+    
+    public static double Rating(String placeid) throws MalformedURLException, IOException, JSONException{
+        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=";
+        s += placeid;
+        URL url = new URL(s);
+            
+        //criando um objeto scanner para receber o arquivo gerado pela url
+        Scanner scan = new Scanner(url.openStream());
+            
+        //concatenando todas as linhas do arquivo na string str
+        String str = new String();
+        while (scan.hasNext()) {
+            str += scan.nextLine();
+        }
+        scan.close();
+        
+        JSONObject obj = new JSONObject(str);
+        double rating = obj.getJSONObject("result").getDouble("rating");
+        return rating;
+    }
+    
+    public static String RatEncode(double rating){
+        int pace=0; 
+        double sum=0.6;
+        if(rating <= 0.5){
+            pace=0;
+        }
+        else{
+            while(sum <= rating){
+                sum += 0.3;
+                pace++;
+            } 
+        }
+        StringBuilder binary = new StringBuilder();
+        binary.append(Integer.toBinaryString(pace));
+        for(int n=binary.length(); n<4; n++) {
+              binary.insert(0, "0");
+        }
+        
+        return binary.toString();
+    }
+    
+    public static String PriceCode(){
+        int price, pace=0, sum=50;
+        Random rand = new Random();
+        price = 50 + 5*rand.nextInt(71);
+        while(sum < price){
+            if(pace/5 == 0){
+                sum += 10;
+            }else if((pace/5 == 1) && (pace/10 == 0)){
+                sum += 20;
+            }else if((pace/10 == 1) && (pace/14 == 0)){
+                sum += 30;
+            }
+            else{
+                sum += 40;
+            }
+            pace++;
+        }
+        StringBuilder binary = new StringBuilder();
+        binary.append(Integer.toBinaryString(pace-1));
+        for(int n=binary.length(); n<4; n++) {
+              binary.insert(0, "0");
+        }
+        return binary.toString();
+    }
+    
+    //A String de entrada tem o seguinte formato XXhYY
+    public static void HourEncode(String minw, String maxw, String minwe, String maxwe, String placeid) throws MalformedURLException, IOException, JSONException{
+        minw = minw.replace("h", "");
+        maxw = maxw.replace("h", "");
+        minwe = minwe.replace("h", "");
+        maxwe = maxwe.replace("h", "");
+        System.out.println(minw);
+        int hminw = Integer.parseInt(minw);
+        int hmaxw = Integer.parseInt(maxw);
+        int hminwe = Integer.parseInt(minwe);
+        int hmaxwe = Integer.parseInt(maxwe);
+        System.out.println(hminw);
+        String s = "https://maps.googleapis.com/maps/api/place/details/json?"
+                + "key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=" + placeid;            
+        //criando uma url com a string concatenada
+        URL url = new URL(s);
+            
+        //criando um objeto scanner para receber o arquivo gerado pela url
+        Scanner scan = new Scanner(url.openStream());
+            
+        //concatenando todas as linhas do arquivo na string str
+        String str = new String();
+        while (scan.hasNext()) {
+            str += scan.nextLine();
+        }
+        scan.close();
+        
+        // Construindo um objeto json
+        JSONObject obj = new JSONObject(str);
+        
+        //Capturando os horários de abertura e fechamento durante a semana, através de um longo caminho...
+        JSONObject array = obj.getJSONObject("result").getJSONObject("opening_hours");
+        JSONArray periods = array.getJSONArray("periods");
+        JSONObject whourOpen = periods.getJSONObject(periods.length()-2).getJSONObject("open");
+        JSONObject whourClose = periods.getJSONObject(periods.length()-2).getJSONObject("close");
+        
+        int wOpen = whourOpen.getInt("time");
+        int wClose = whourClose.getInt("time");
+        System.out.println(wOpen);
+        JSONObject wEhourOpen = periods.getJSONObject(periods.length()-1).getJSONObject("open");
+        JSONObject wEhourClose = periods.getJSONObject(periods.length()-1).getJSONObject("close");
+        
+        int wEOpen = wEhourOpen.getInt("time");
+        int wEClose = wEhourClose.getInt("time");
+        System.out.println(wEOpen);
+        String code = new String();
+        if((hminw>wOpen && hmaxw<wClose) && (hminwe>wEOpen && hmaxwe<wEClose)){
+            code = "00";
+        }
+        else if((hminw>wOpen && hmaxw<wClose) && !(hminwe>wEOpen && hmaxwe<wEClose))
+        {
+            code = "01";
+        }
+        else if(!(hminw>wOpen && hmaxw<wClose) && (hminwe>wEOpen && hmaxwe<wEClose)){
+            code = "10";
+        }
+        else{
+            code = "11";
+        }
+//        System.out.println("opens at " + whourOpen.getInt("time"));
+//        System.out.println("closes at " + whourClose.getInt("time"));
+    }
+    
 }
+
