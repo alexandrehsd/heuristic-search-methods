@@ -65,9 +65,12 @@ public class GymBuilder {
         database[i].setBits(12, 13, HourEncode(minw, maxw, minwe, maxwe, readLine));
         //padronizando a string s;
         s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCu31abb63Vr40DpK_FI8xxeEKWCHbMHws&placeid=";
+        str="";
         i++;
             System.out.println(i);
+            
         }
+        
         return database;
     }
     
