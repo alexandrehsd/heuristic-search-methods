@@ -16,7 +16,7 @@ import org.json.JSONObject;
 
 public class GymBuilder {
     
-    public static void Gyms() throws MalformedURLException, IOException, JSONException{
+    public static void Gyms(String addr, String minw, String maxw, String minwe, String maxwe) throws MalformedURLException, IOException, JSONException{
         //String[] placeids = new String[199];
         //String padrão para fazer o request dos placeids
         String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=";
@@ -26,8 +26,12 @@ public class GymBuilder {
         BufferedReader b = new BufferedReader(new FileReader(f));
         String readLine = "";
         
+        Chromosome[] database = new Chromosome[131];
+        for(int i=0;i<131;i++){
+            database[i] = new Chromosome();
+        }
         //Contador de academias
-        int i=1;
+        int i=0;
         //O código executará enquanto houverem linhas restantes no placeids.txt
         while ((readLine = b.readLine()) != null) {
             //concatenando a string padrão com o placeid atual
@@ -46,33 +50,27 @@ public class GymBuilder {
             }
             scan.close();
             
-            System.out.println("---- Gym " + i +" characteristcs ----");
-            // Construindo um objeto json
-            JSONObject obj = new JSONObject(str);
-            
-            //Capturando a localização, a partir do caminho result->geometry->location do arquivo json
-            JSONObject loc = obj.getJSONObject("result").getJSONObject("geometry").getJSONObject("location");
-            System.out.println("lat: " + loc.getDouble("lat") + ", lng: " + loc.getDouble("lng"));
-            
-            //Capturando o rate, a partir do caminho result->rating
-            JSONObject rate = obj.getJSONObject("result");
-            System.out.println("rate: " + rate.getDouble("rating"));
-            
-            //Capturando os horários de abertura e fechamento durante a semana, através de um longo caminho...
-            JSONObject array = obj.getJSONObject("result").getJSONObject("opening_hours");
-            JSONArray periods = array.getJSONArray("periods");
-            JSONObject whourOpen = periods.getJSONObject(1).getJSONObject("open");
-            JSONObject whourClose = periods.getJSONObject(1).getJSONObject("close");
-            System.out.println("opens at " + whourOpen.getInt("time"));
-            System.out.println("closes at " + whourClose.getInt("time"));
-            i++;
+        JSONObject obj = new JSONObject(str);
+        JSONArray array = obj.getJSONArray("results");
+        JSONObject loc = array.getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
+        
+        int dist = GymBuilder.distance(loc.getString("lat"), loc.getString("lng"), addr);
+        database[i].setBits(0, 3, DistEncode(dist));
+        
+        double rating = GymBuilder.Rating(s);
+        database[i].setBits(4, 7, RatEncode(rating));
+        
+        database[i].setBits(8, 11, PriceCode());
+        database[i].setBits(12, 13, HourEncode(minw, maxw, minwe, maxwe, s));
             //padronizando a string s;
             s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=";
+        i++;
         }   
     }
     
     public static int distance(String lat, String lng, String address) throws MalformedURLException, IOException, JSONException{
         //String para request dos dados do endereço do usuário
+        address = address.replace(" ", "+");
         String addr = "https://maps.googleapis.com/maps/api/geocode/json?"
                 + "key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&address=" + address;
         //Criando uma URL a partir de addr
@@ -124,7 +122,7 @@ public class GymBuilder {
         return distance;
     }
     
-    public static String DistEncode(int dist){
+    public static int[] DistEncode(int dist){
         int id=0;
         int sum = 0;
         while(sum < dist){
@@ -143,7 +141,14 @@ public class GymBuilder {
               binary.insert(0, "0");
         }
         
-        return binary.toString();
+        int[] bits = new int[binary.length()];
+        String bin = binary.toString();
+        
+        for(int i =0;i<binary.length();i++){
+            bits[i] = bin.charAt(i) - 48;
+        }
+        return bits;
+        
     }
     
     public static double Rating(String placeid) throws MalformedURLException, IOException, JSONException{
@@ -166,7 +171,7 @@ public class GymBuilder {
         return rating;
     }
     
-    public static String RatEncode(double rating){
+    public static int[] RatEncode(double rating){
         int pace=0; 
         double sum=0.6;
         if(rating <= 0.5){
@@ -184,10 +189,16 @@ public class GymBuilder {
               binary.insert(0, "0");
         }
         
-        return binary.toString();
+        int[] bits = new int[binary.length()];
+        String bin = binary.toString();
+        
+        for(int i =0;i<binary.length();i++){
+            bits[i] = bin.charAt(i) - 48;
+        }
+        return bits;
     }
     
-    public static String PriceCode(){
+    public static int[] PriceCode(){
         int price, pace=0, sum=50;
         Random rand = new Random();
         price = 50 + 5*rand.nextInt(71);
@@ -209,21 +220,27 @@ public class GymBuilder {
         for(int n=binary.length(); n<4; n++) {
               binary.insert(0, "0");
         }
-        return binary.toString();
+        int[] bits = new int[binary.length()];
+        String bin = binary.toString();
+        
+        for(int i =0;i<binary.length();i++){
+            bits[i] = bin.charAt(i) - 48;
+        }
+        return bits;
     }
     
     //A String de entrada tem o seguinte formato XXhYY
-    public static void HourEncode(String minw, String maxw, String minwe, String maxwe, String placeid) throws MalformedURLException, IOException, JSONException{
+    public static int[] HourEncode(String minw, String maxw, String minwe, String maxwe, String placeid) throws MalformedURLException, IOException, JSONException{
         minw = minw.replace("h", "");
         maxw = maxw.replace("h", "");
         minwe = minwe.replace("h", "");
         maxwe = maxwe.replace("h", "");
-        System.out.println(minw);
+        
         int hminw = Integer.parseInt(minw);
         int hmaxw = Integer.parseInt(maxw);
         int hminwe = Integer.parseInt(minwe);
         int hmaxwe = Integer.parseInt(maxwe);
-        System.out.println(hminw);
+        
         String s = "https://maps.googleapis.com/maps/api/place/details/json?"
                 + "key=AIzaSyC8zOWqLGn1N-V_UAB4QQGI7QTdQnZTEeo&placeid=" + placeid;            
         //criando uma url com a string concatenada
@@ -250,29 +267,33 @@ public class GymBuilder {
         
         int wOpen = whourOpen.getInt("time");
         int wClose = whourClose.getInt("time");
-        System.out.println(wOpen);
+        
         JSONObject wEhourOpen = periods.getJSONObject(periods.length()-1).getJSONObject("open");
         JSONObject wEhourClose = periods.getJSONObject(periods.length()-1).getJSONObject("close");
         
         int wEOpen = wEhourOpen.getInt("time");
         int wEClose = wEhourClose.getInt("time");
-        System.out.println(wEOpen);
-        String code = new String();
+        
+        int []code = new int[2];
         if((hminw>wOpen && hmaxw<wClose) && (hminwe>wEOpen && hmaxwe<wEClose)){
-            code = "00";
+            code[0]=0;
+            code[1]=0;
         }
         else if((hminw>wOpen && hmaxw<wClose) && !(hminwe>wEOpen && hmaxwe<wEClose))
         {
-            code = "01";
+            code[0]=0;
+            code[1]=1;
         }
         else if(!(hminw>wOpen && hmaxw<wClose) && (hminwe>wEOpen && hmaxwe<wEClose)){
-            code = "10";
+            code[0]=1;
+            code[1]=0;
         }
         else{
-            code = "11";
+            code[0]=1;
+            code[1]=1;
         }
-//        System.out.println("opens at " + whourOpen.getInt("time"));
-//        System.out.println("closes at " + whourClose.getInt("time"));
+        
+        return code;
     }
     
 }
