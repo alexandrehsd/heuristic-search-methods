@@ -42,47 +42,6 @@ public final class Operator {
             
         }
         return selected;
-
-        
-        //Supondo que sempre serão selecionados 18/20 indivíduos, temos que
-        //k = pop.length-2 deve ter sempre esse valor.
-         
-        //Ordenação em ordem crescente de fitness do vetor de população
-        //Sort.BubbleSort(pop);
-        
-        //Iniciando o torneio
-//        Random rand = new Random();
-//        
-//        //vetor de guardará os cromossomos selecionados
-//        Chromosome[] selected = new Chromosome[pop.length-2];
-//        
-//        //Índices dos cromossomos do vetor da população que serão utilizados
-//        //para o torneio
-//        int crom1, crom2, crom3;
-//        
-//        //Variáveis que vão guardar os valores de fitness dos lutadores
-//        double f1, f2, f3;
-//        for(int i=0;i<pop.length-2;i++){
-//            //Gerando um índice aleatório de 0 a 19
-//            crom1 = rand.nextInt(20);
-//            crom2 = rand.nextInt(20);
-//            crom3 = rand.nextInt(20);
-//            //atribuindo o valor de fitness de cada lutador
-//            f1 = pop[crom1].getFitness();
-//            f2 = pop[crom2].getFitness();
-//            f3 = pop[crom3].getFitness();
-//            
-//            //Atribuindo o vencedor à posição i do vetor de selected
-//            if(f1 >= f2 && f1 >= f3){
-//                selected[i] = pop[crom1];
-//            } else if (f2 >= f1 && f2 >= f3) {
-//                selected[i] = pop[crom2];
-//            } else if (f3 >= f1 && f3 >= f2){
-//                selected[i] = pop[crom3];
-//            }
-//        }
-//        
-//        return selected;
     }
     
     //Este método é responsável por aplicar uma mutação a um cromossomo A

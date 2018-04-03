@@ -1,13 +1,11 @@
 package ag;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import org.json.JSONArray;
@@ -19,24 +17,29 @@ public class GymBuilder {
     public static Chromosome[] Gyms(String addr, String minw, String maxw, String minwe, String maxwe) throws MalformedURLException, IOException, JSONException{
         //String[] placeids = new String[199];
         //String padrão para fazer o request dos placeids
-        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCu31abb63Vr40DpK_FI8xxeEKWCHbMHws&placeid=";
+        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&placeid=";
         
         //Leitura do arquivo placeid
-        File f = new File("/home/alexandre/Documentos/GitHub/AI-Algorithms/AG/placeids.txt");
-        BufferedReader b = new BufferedReader(new FileReader(f));
-        String readLine = "";
+        File file = new File("/home/alexandre/Documentos/GitHub/AI-Algorithms/AG/placeids.txt");
+        Scanner input = new Scanner(file);
+        List<String> list = new ArrayList<>();
         
-        Chromosome[] database = new Chromosome[131];
-        for(int i=0;i<131;i++){
+        double lat, lng, rating;
+        int dist, wOpen, wEOpen, wClose, wEClose;
+        
+        Chromosome[] database = new Chromosome[79];
+        for(int i=0;i<79;i++){
             database[i] = new Chromosome();
         }
         //Contador de academias
         int i=0;
+        String str="";
         //O código executará enquanto houverem linhas restantes no placeids.txt
-        while ((readLine = b.readLine()) != null) {
+       while (input.hasNextLine()) {
             
             //concatenando a string padrão com o placeid atual
-            s += readLine;
+            list.add(input.nextLine());
+            s += list.get(i);
             
             //criando uma url com a string concatenada
             URL url = new URL(s);
@@ -45,29 +48,46 @@ public class GymBuilder {
             Scanner scan = new Scanner(url.openStream());
             
             //concatenando todas as linhas do arquivo na string str
-            String str = new String();
+            str = "";
             while (scan.hasNext()) {
                 str += scan.nextLine();
             }
             scan.close();
             
+            
         JSONObject obj = new JSONObject(str);
         JSONObject loc = obj.getJSONObject("result").getJSONObject("geometry").getJSONObject("location");
-        double lat = loc.getDouble("lat");
-        double lng = loc.getDouble("lng");
-        int dist = GymBuilder.distance(Double.toString(lat), Double.toString(lng), addr);
+        lat = loc.getDouble("lat");
+        lng = loc.getDouble("lng");
+        dist = GymBuilder.distance(Double.toString(lat), Double.toString(lng), addr);
         database[i].setBits(0, 3, DistEncode(dist));
-            
-        double rating = GymBuilder.Rating(readLine);
+        
+        rating = obj.getJSONObject("result").getDouble("rating");
         database[i].setBits(4, 7, RatEncode(rating));
         
         database[i].setBits(8, 11, PriceCode());
-        database[i].setBits(12, 13, HourEncode(minw, maxw, minwe, maxwe, readLine));
+        
+        //Capturando os horários de abertura e fechamento durante a semana, através de um longo caminho...
+        JSONObject array = obj.getJSONObject("result").getJSONObject("opening_hours");
+        JSONArray periods = array.getJSONArray("periods");
+        JSONObject whourOpen = periods.getJSONObject(periods.length()-2).getJSONObject("open");
+        JSONObject whourClose = periods.getJSONObject(periods.length()-2).getJSONObject("close");
+        
+        wOpen = whourOpen.getInt("time");
+        wClose = whourClose.getInt("time");
+        
+        JSONObject wEhourOpen = periods.getJSONObject(periods.length()-1).getJSONObject("open");
+        JSONObject wEhourClose = periods.getJSONObject(periods.length()-1).getJSONObject("close");
+        
+        wEOpen = wEhourOpen.getInt("time");
+        wEClose = wEhourClose.getInt("time");
+        
+        database[i].setBits(12, 13, HourEncode(minw, maxw, minwe, maxwe, wOpen, wClose, wEOpen, wEClose));
         //padronizando a string s;
-        s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCu31abb63Vr40DpK_FI8xxeEKWCHbMHws&placeid=";
-        str="";
+        s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&placeid=";
+        
         i++;
-            System.out.println(i);
+        System.out.println(i);
             
         }
         
@@ -78,7 +98,7 @@ public class GymBuilder {
         //String para request dos dados do endereço do usuário
         address = address.replace(" ", "+");
         String addr = "https://maps.googleapis.com/maps/api/geocode/json?"
-                + "key=AIzaSyCu31abb63Vr40DpK_FI8xxeEKWCHbMHws&address=" + address;
+                + "key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&address=" + address;
         //Criando uma URL a partir de addr
         URL url = new URL(addr);
         
@@ -86,7 +106,7 @@ public class GymBuilder {
         Scanner scan = new Scanner(url.openStream());
         
         //concatenando todas as linhas do arquivo na String jfile
-        String jfile = new String();
+        String jfile = "";
         while (scan.hasNext()) {
             jfile += scan.nextLine();
         }
@@ -106,7 +126,7 @@ public class GymBuilder {
         
         //String de url para fazer o request dos dados entre a origem e o destino
         String geoinfo = "https://maps.googleapis.com/maps/api/distancematrix/json?"
-                + "mode=driving&key=AIzaSyCu31abb63Vr40DpK_FI8xxeEKWCHbMHws&"
+                + "mode=driving&key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&"
                 + "origins=" + origins + "&destinations=" + destinations;
         
         //Criando url output a partir de geoinfo
@@ -156,28 +176,6 @@ public class GymBuilder {
             bits[i] = bin.charAt(i) - 48;
         }
         return bits;
-        
-    }
-    
-    public static double Rating(String placeid) throws MalformedURLException, IOException, JSONException{
-        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCu31abb63Vr40DpK_FI8xxeEKWCHbMHws&placeid=";
-        s += placeid;
-        URL url = new URL(s);
-            
-        //criando um objeto scanner para receber o arquivo gerado pela url
-        Scanner scan = new Scanner(url.openStream());
-            
-        //concatenando todas as linhas do arquivo na string str
-        String str = new String();
-        while (scan.hasNext()) {
-            str += scan.nextLine();
-        }
-        scan.close();
-        
-        JSONObject obj = new JSONObject(str);
-        JSONObject result = obj.getJSONObject("result");
-        double rating = result.getDouble("rating");
-        return rating;
         
     }
     
@@ -240,7 +238,7 @@ public class GymBuilder {
     }
     
     //A String de entrada tem o seguinte formato XXhYY
-    public static int[] HourEncode(String minw, String maxw, String minwe, String maxwe, String placeid) throws MalformedURLException, IOException, JSONException{
+    public static int[] HourEncode(String minw, String maxw, String minwe, String maxwe, int wOpen, int wClose, int wEOpen, int wEClose) throws MalformedURLException, IOException, JSONException{
         minw = minw.replace("h", "");
         maxw = maxw.replace("h", "");
         minwe = minwe.replace("h", "");
@@ -249,40 +247,7 @@ public class GymBuilder {
         int hminw = Integer.parseInt(minw);
         int hmaxw = Integer.parseInt(maxw);
         int hminwe = Integer.parseInt(minwe);
-        int hmaxwe = Integer.parseInt(maxwe);
-        
-        String s = "https://maps.googleapis.com/maps/api/place/details/json?"
-                + "key=AIzaSyCu31abb63Vr40DpK_FI8xxeEKWCHbMHws&placeid=" + placeid;            
-        //criando uma url com a string concatenada
-        URL url = new URL(s);
-            
-        //criando um objeto scanner para receber o arquivo gerado pela url
-        Scanner scan = new Scanner(url.openStream());
-            
-        //concatenando todas as linhas do arquivo na string str
-        String str = new String();
-        while (scan.hasNext()) {
-            str += scan.nextLine();
-        }
-        scan.close();
-        
-        // Construindo um objeto json
-        JSONObject obj = new JSONObject(str);
-        
-        //Capturando os horários de abertura e fechamento durante a semana, através de um longo caminho...
-        JSONObject array = obj.getJSONObject("result").getJSONObject("opening_hours");
-        JSONArray periods = array.getJSONArray("periods");
-        JSONObject whourOpen = periods.getJSONObject(periods.length()-2).getJSONObject("open");
-        JSONObject whourClose = periods.getJSONObject(periods.length()-2).getJSONObject("close");
-        
-        int wOpen = whourOpen.getInt("time");
-        int wClose = whourClose.getInt("time");
-        
-        JSONObject wEhourOpen = periods.getJSONObject(periods.length()-1).getJSONObject("open");
-        JSONObject wEhourClose = periods.getJSONObject(periods.length()-1).getJSONObject("close");
-        
-        int wEOpen = wEhourOpen.getInt("time");
-        int wEClose = wEhourClose.getInt("time");
+        int hmaxwe = Integer.parseInt(maxwe);  
         
         int []code = new int[2];
         if((hminw>wOpen && hmaxw<wClose) && (hminwe>wEOpen && hmaxwe<wEClose)){
@@ -307,4 +272,3 @@ public class GymBuilder {
     }
     
 }
-
