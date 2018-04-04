@@ -155,9 +155,9 @@ public final class Operator {
             ind = rand.nextInt(indexes1.size());
             son = database[indexes1.get(ind)];
         } else{
-            int[] data = new int[]{1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1};
-            son.setBits(0, 13, data);
-            son.setFitness();
+            //SORTEAR QUALQUER ACADEMIA
+            ind = rand.nextInt(database.length);
+            son = database[ind];
         }
         return son;
     }

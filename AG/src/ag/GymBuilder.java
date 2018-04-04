@@ -20,15 +20,15 @@ public class GymBuilder {
         String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&placeid=";
         
         //Leitura do arquivo placeid
-        File file = new File("F:/Documentos/UFRN/Inteligência Artificial Aplicada - Cursando/AI-Algorithms-master/AG/placeids.txt");
+        File file = new File("/home/alexandre/Documentos/GitHub/AI-Algorithms/AG/placeids.txt");
         Scanner input = new Scanner(file);
         List<String> list = new ArrayList<>();
         
         double lat, lng, rating;
         int dist, wOpen, wEOpen, wClose, wEClose;
         
-        Chromosome[] database = new Chromosome[79];
-        for(int i=0;i<79;i++){
+        Chromosome[] database = new Chromosome[77];
+        for(int i=0;i<77;i++){
             database[i] = new Chromosome();
         }
         //Contador de academias
