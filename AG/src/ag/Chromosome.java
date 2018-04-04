@@ -10,7 +10,7 @@ public final class Chromosome {
     
     //Variável da classe, não vinculadas a nenhum cromossomo em particular
     //Constantes definidas com base na entrada do usuário
-    private static double Cr=1.5, Cp=2;
+    private static double Cr=1.5, pmaximum=200;
     
     //Inicializando os cromossomos como um vetor de bits randômicos
     Chromosome(){
@@ -79,18 +79,23 @@ public final class Chromosome {
         }
     }
     
-    public static void setCp(int maxp){
-        if (maxp < 120){
-            Chromosome.Cp = 2.5;
-        } else if (maxp < 250){
-            Chromosome.Cp = 2;
-        } else {
-            Chromosome.Cp = 1.25;
+    public static void setpmax(int pmax){
+        Chromosome.pmaximum = pmax;
+    }
+    
+    public double setCp(double p, double pmaximum){
+        double Cp;
+        if(p<=pmaximum){
+            Cp = 4;
         }
+        else{
+            Cp = 30;
+        }
+        return Cp;
     }
     
     public void setFitness(){
-        double d, h, r, p;
+        double d, h, r, p, Cp;
         //the gencode has a form [ddddrrrrpppphh]
         //d stands for distance, r for rate, p for price and h for hour.
         
@@ -98,13 +103,20 @@ public final class Chromosome {
         r = this.setr(this.getBits(4, 7));
         p = this.setp(this.getBits(8, 11));
         h = this.seth(this.getBits(12, 13));
+        Cp = this.setCp(p, setpaux());
         
-        this.fitness = 7/pow(d,0.75) + 2*pow(h,2) + Chromosome.Cr*pow(r,1.5) + Chromosome.Cp*2/p;
+        if(Cp==4){
+            this.fitness = 7/pow(d,0.75) + 2*pow(h,2) + Chromosome.Cr*pow(r,1.5) + Cp*2/p;
+        }
+        else{
+            this.fitness = 7/pow(d,0.75) + 2*pow(h,2) + Chromosome.Cr*pow(r,1.5) - Cp;
+        }
     }
     
     public double getFitness(){
         return this.fitness;
     }
+    
     public double setd(int bits[]){
         double d=2;
         switch(Arrays.toString(bits).replaceAll("\\[|\\]|,|\\s", "")){
@@ -275,6 +287,27 @@ public final class Chromosome {
         }
         return p;
     }
+    
+    public double setpaux(){
+        int pace=0, sum=0;
+        double paux;
+        while(sum < Chromosome.pmaximum){
+            if(pace/5 == 0){
+                sum += 10;
+            }else if((pace/5 == 1) && (pace/10 == 0)){
+                sum += 20;
+            }else if((pace/10 == 1) && (pace/14 == 0)){
+                sum += 30;
+            }
+            else{
+                sum += 40;
+            }
+            pace++;
+        }
+        paux = pace*0.25;
+        return paux;
+    }
+    
     public double seth(int bits[]){
         double h=1;
         switch(Arrays.toString(bits).replaceAll("\\[|\\]|,|\\s", "")){
@@ -295,5 +328,5 @@ public final class Chromosome {
         }
         return h;
     }
-    
+   
 }
