@@ -20,7 +20,7 @@ public class GymBuilder {
         String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&placeid=";
         
         //Leitura do arquivo placeid
-        File file = new File("/home/alexandre/Documentos/GitHub/AI-Algorithms/AG/placeids.txt");
+        File file = new File("F:/Documentos/UFRN/Inteligência Artificial Aplicada - Cursando/AI-Algorithms-master/AG/placeids.txt");
         Scanner input = new Scanner(file);
         List<String> list = new ArrayList<>();
         
@@ -83,6 +83,7 @@ public class GymBuilder {
         wEClose = wEhourClose.getInt("time");
         
         database[i].setBits(12, 13, HourEncode(minw, maxw, minwe, maxwe, wOpen, wClose, wEOpen, wEClose));
+        database[i].setFitness();
         //padronizando a string s;
         s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&placeid=";
         
@@ -151,37 +152,46 @@ public class GymBuilder {
     }
     
     public static int[] DistEncode(int dist){
-        int id=0;
+        int pace=0;
         int sum = 0;
+        
+        /// CALCULA O VALOR DE PACE, QUE IRÁ DEFINIR O NÚMERO DO INTERVALO PARA CODIFICAÇÃO DO RATING (0000 -> Intervalo 1) ; (1000 -> Intervalo 9)
         while(sum < dist){
-            if(id/5 == 0){
+            if(pace/5 == 0){
                 sum += 300;
-            }else if(id/5 == 1){
+            }else if(pace/5 == 1){
                 sum += 500;
             }else{
                 sum += 1000;
             }
-            id++;
-        }        
+            pace++;
+        }       
+        if(dist<9000){ // Corrige erros de cálculo de distância
+            pace = pace-2; 
+        }
+        
+        /// CONSTRÓI A STRING NO FORMATO (0101)
         StringBuilder binary = new StringBuilder();
-        binary.append(Integer.toBinaryString(id-1));
+        binary.append(Integer.toBinaryString(pace-1));
         for(int n=binary.length(); n<4; n++) {
               binary.insert(0, "0");
         }
-        
         int[] bits = new int[binary.length()];
         String bin = binary.toString();
         
+        /// MAPEIA A STRING EM UM VETOR DE INTEIROS, NO FORMATO [0, 1, 0, 1]
         for(int i =0;i<binary.length();i++){
             bits[i] = bin.charAt(i) - 48;
         }
-        return bits;
         
+        return bits;
     }
     
     public static int[] RatEncode(double rating){
         int pace=0; 
         double sum=0.6;
+        
+        /// CALCULA O VALOR DE PACE, QUE IRÁ DEFINIR O NÚMERO DO INTERVALO PARA CODIFICAÇÃO DO RATING (0000 -> Intervalo 1) ; (1000 -> Intervalo 9)
         if(rating <= 0.5){
             pace=0;
         }
@@ -191,25 +201,45 @@ public class GymBuilder {
                 pace++;
             } 
         }
+        
+        /// CONSTRÓI A STRING NO FORMATO (0101)
         StringBuilder binary = new StringBuilder();
         binary.append(Integer.toBinaryString(pace));
         for(int n=binary.length(); n<4; n++) {
               binary.insert(0, "0");
         }
-        
         int[] bits = new int[binary.length()];
         String bin = binary.toString();
         
+        /// MAPEIA A STRING EM UM VETOR DE INTEIROS, NO FORMATO [0, 1, 0, 1]
         for(int i =0;i<binary.length();i++){
             bits[i] = bin.charAt(i) - 48;
         }
+        
         return bits;
     }
     
     public static int[] PriceCode(){
-        int price, pace=0, sum=50;
+        int aux, price, pace=0, sum=50;
         Random rand = new Random();
-        price = 50 + 5*rand.nextInt(71);
+        
+        aux = rand.nextInt(10); // Variável auxiliar para definir a faixa de preço
+        switch (aux) {
+            case 0: case 1: case 2: case 3:// A academia se enquadra na faixa de academias baratas (50-100)R$
+                price = 50 + rand.nextInt(51);
+                break;
+            case 4: case 5: case 6:// A academia se enquadra na faixa de academias acessíveis (100-200)R$
+                price = 100 + rand.nextInt(101);
+                break;
+            case 7: case 8: // A academia se enquadra na faixa de academias caras (200-320)R$
+                price = 200 + rand.nextInt(121); 
+                break;
+            default: // A academia se enquadra na faixa de academias de luxo (320-400)R$
+                price = 320 + rand.nextInt(81);
+                break;
+        }
+        
+        /// CALCULA O VALOR DE PACE, QUE IRÁ DEFINIR O NÚMERO DO INTERVALO PARA CODIFICAÇÃO DO PREÇO (0000 -> Intervalo 1) ; (1000 -> Intervalo 9)
         while(sum < price){
             if(pace/5 == 0){
                 sum += 10;
@@ -223,6 +253,9 @@ public class GymBuilder {
             }
             pace++;
         }
+        
+        System.out.println("Preco da academia: " + price);
+        /// CONSTRÓI A STRING NO FORMATO (0101)
         StringBuilder binary = new StringBuilder();
         binary.append(Integer.toBinaryString(pace-1));
         for(int n=binary.length(); n<4; n++) {
@@ -231,6 +264,7 @@ public class GymBuilder {
         int[] bits = new int[binary.length()];
         String bin = binary.toString();
         
+        /// MAPEIA A STRING EM UM VETOR DE INTEIROS, NO FORMATO [0, 1, 0, 1]
         for(int i =0;i<binary.length();i++){
             bits[i] = bin.charAt(i) - 48;
         }
@@ -239,31 +273,55 @@ public class GymBuilder {
     
     //A String de entrada tem o seguinte formato XXhYY
     public static int[] HourEncode(String minw, String maxw, String minwe, String maxwe, int wOpen, int wClose, int wEOpen, int wEClose) throws MalformedURLException, IOException, JSONException{
+        boolean wflag = false, weflag = false; // Variáveis que indicam se o usuário pode malhar na academia em questão durante os dias de semana e o fim de semana, respectivamente
+        int []code = new int[2];
+       
+        /// SUBSTITUI O "h" DAS ENTRADAS (17h00) POR VAZIO -> (1700)
         minw = minw.replace("h", "");
         maxw = maxw.replace("h", "");
         minwe = minwe.replace("h", "");
         maxwe = maxwe.replace("h", "");
         
+        /// CONVERTE OS VALORES ANTERIORES PARA UM INTEIRO (1700) -> 17
         int hminw = Integer.parseInt(minw);
         int hmaxw = Integer.parseInt(maxw);
         int hminwe = Integer.parseInt(minwe);
         int hmaxwe = Integer.parseInt(maxwe);  
+      
+        /// VERIFICA SE O USUÁRIO PODE MALHAR NA ACADEMIA EM QUESTÃO DURANTE OS DIAS DE SEMANA
+        for(int i=wOpen; i<=wClose; i++){
+            for(int j=hminw; j<=hmaxw; j++){
+                if(j==i){
+                    wflag = true;
+                    break;
+                }
+            }
+        }
         
-        int []code = new int[2];
-        if((hminw>wOpen && hmaxw<wClose) && (hminwe>wEOpen && hmaxwe<wEClose)){
+        /// VERIFICA SE O USUÁRIO PODE MALHAR NA ACADEMIA EM QUESTÃO DURANTE O FIM DE SEMANA
+        for(int i=wEOpen; i<=wEClose; i++){
+            for(int j=hminwe; j<=hmaxwe; j++){
+                if(j==i){
+                    weflag = true;
+                    break;
+                }
+            }
+        }
+        
+        if((wflag) && (weflag)){ // Se ele pode malhar em ambos, dias de semana e fim de semana
             code[0]=0;
             code[1]=0;
         }
-        else if((hminw>wOpen && hmaxw<wClose) && !(hminwe>wEOpen && hmaxwe<wEClose))
+        else if((wflag) && !(weflag)) // Se ele pode malhar apenas nos dias de semana
         {
             code[0]=0;
             code[1]=1;
         }
-        else if(!(hminw>wOpen && hmaxw<wClose) && (hminwe>wEOpen && hmaxwe<wEClose)){
+        else if(!(wflag) && (weflag)){ // Se ele pode malhar apenas no fim de semana
             code[0]=1;
             code[1]=0;
         }
-        else{
+        else{ // Se ele não pode malhar nessa academia
             code[0]=1;
             code[1]=1;
         }
