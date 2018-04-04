@@ -220,7 +220,7 @@ public class GymBuilder {
     }
     
     public static int[] PriceCode(){
-        int aux, price, pace=0, sum=50;
+        int aux, price, pace=0, sum=49;
         Random rand = new Random();
         
         aux = rand.nextInt(10); // Variável auxiliar para definir a faixa de preço
