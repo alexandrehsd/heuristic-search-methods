@@ -10,38 +10,25 @@ public final class Operator {
     
     //Seleção para crossover -> Torneio
     public static Chromosome[] selection(Chromosome pop[]){
-        double soma =0;
-        Chromosome[] selected = new Chromosome[pop.length-2];
-        for (int i = 0; i < selected.length; i++) {
-            selected[i] = new Chromosome();
-        }
-        
-        for(int i=0;i<pop.length; i++){
-            soma += pop[i].getFitness();
-        }
-        
-        double[] aux = new double[pop.length];
-        
-        for(int i=0;i<pop.length; i++){
-            aux[i] = 1000*pop[i].getFitness()/soma;
-        }
-        
-        Random generator = new Random();
-        
-        int k = pop.length-2;
-        for(int i=0;i<k; i++){
-            int pos = 0;
-            int aleatorio = generator.nextInt(1000);
-            double somaAux = 0;
-            while(somaAux <= aleatorio){
-                somaAux += aux[pos];
-                pos++;
+        Chromosome[] sel = new Chromosome[18];
+        int i1, i2, i3;
+        for(int i=0; i<18; i++){
+            Random rand = new Random();
+            /// SELECIONA 3 INDIVÍDUOS PARA DISPUTAR O TORNEIO i
+            i1 = rand.nextInt(pop.length);
+            i2 = rand.nextInt(pop.length);
+            i3 = rand.nextInt(pop.length);
+            if(pop[i1].getFitness() >= pop[i2].getFitness() && pop[i1].getFitness() >= pop[i3].getFitness()){
+                sel[i] = pop[i1];
             }
-            pos--;
-            selected[i] = pop[pos];
-            
+            else if(pop[i2].getFitness() >= pop[i1].getFitness() && pop[i2].getFitness() >= pop[i3].getFitness()){
+                sel[i] = pop[i2];
+            }
+            else{
+                sel[i] = pop[i3];
+            }
         }
-        return selected;
+        return sel;
     }
     
     //Este método é responsável por aplicar uma mutação a um cromossomo A
@@ -91,11 +78,11 @@ public final class Operator {
             sons[i+1].setBits(6, 7, selected[i].getBits(6, 7));
 
             //Cruzando os bits responsáveis pelo preço [8,9]
-            sons[i].setBits(8, 11, selected[i].getBits(8, 11));
-            sons[i+1].setBits(8, 11, selected[i+1].getBits(8, 11));
+            sons[i].setBits(8, 9, selected[i].getBits(8, 9));
+            sons[i+1].setBits(8, 9, selected[i+1].getBits(8, 9));
 
-            sons[i].setBits(8, 11, selected[i+1].getBits(8, 11));
-            sons[i+1].setBits(8, 11, selected[i].getBits(8, 11));
+            sons[i].setBits(10, 11, selected[i+1].getBits(10, 11));
+            sons[i+1].setBits(10, 11, selected[i].getBits(10, 11));
 
             //Cruzando os bits responsáveis pelo horário de funcionamento [10,11]
             sons[i].setBit(12, selected[i].getBit(12));
@@ -155,7 +142,7 @@ public final class Operator {
             ind = rand.nextInt(indexes1.size());
             son = database[indexes1.get(ind)];
         } else{
-            //SORTEAR QUALQUER ACADEMIA
+            // SORTEAR QUALQUER ACADEMIA
             ind = rand.nextInt(database.length);
             son = database[ind];
         }
