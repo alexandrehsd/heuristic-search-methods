@@ -35,7 +35,7 @@ public final class Operator {
     //selecionando um bit aleatório do seu gene e invertendo seu valor
     public static Chromosome mutation(Chromosome A){
         Random rand = new Random();
-        int index = rand.nextInt(14);
+        int index = rand.nextInt(1);
         if(A.getBit(index) == 0){
             A.setBit(index, 1);
         } else {

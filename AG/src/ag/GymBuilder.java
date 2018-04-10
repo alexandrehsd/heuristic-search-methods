@@ -17,7 +17,7 @@ public class GymBuilder {
     public static Chromosome[] Gyms(String addr, String minw, String maxw, String minwe, String maxwe) throws MalformedURLException, IOException, JSONException{
         //String[] placeids = new String[199];
         //String padrão para fazer o request dos placeids
-        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&placeid=";
+        String s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCwYJvP0YHepfjOIiz0orFYjzlxn6AJrOQ&placeid=";
         
         //Leitura do arquivo placeid
         File file = new File("/home/alexandre/Documentos/GitHub/AI-Algorithms/AG/placeids.txt");
@@ -27,8 +27,8 @@ public class GymBuilder {
         double lat, lng, rating;
         int dist, wOpen, wEOpen, wClose, wEClose;
         
-        Chromosome[] database = new Chromosome[77];
-        for(int i=0;i<77;i++){
+        Chromosome[] database = new Chromosome[76];
+        for(int i=0;i<76;i++){
             database[i] = new Chromosome();
         }
         //Contador de academias
@@ -85,7 +85,7 @@ public class GymBuilder {
         database[i].setBits(12, 13, HourEncode(minw, maxw, minwe, maxwe, wOpen, wClose, wEOpen, wEClose));
         database[i].setFitness();
         //padronizando a string s;
-        s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&placeid=";
+        s = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCwYJvP0YHepfjOIiz0orFYjzlxn6AJrOQ&placeid=";
         
         i++;
         System.out.println(i);
@@ -99,7 +99,7 @@ public class GymBuilder {
         //String para request dos dados do endereço do usuário
         address = address.replace(" ", "+");
         String addr = "https://maps.googleapis.com/maps/api/geocode/json?"
-                + "key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&address=" + address;
+                + "key=AIzaSyCwYJvP0YHepfjOIiz0orFYjzlxn6AJrOQ&address=" + address;
         //Criando uma URL a partir de addr
         URL url = new URL(addr);
         
@@ -127,7 +127,7 @@ public class GymBuilder {
         
         //String de url para fazer o request dos dados entre a origem e o destino
         String geoinfo = "https://maps.googleapis.com/maps/api/distancematrix/json?"
-                + "mode=driving&key=AIzaSyDZxoYnGOB_BCKxNnPBDzKAIFk1PYw3Yto&"
+                + "mode=driving&key=AIzaSyCwYJvP0YHepfjOIiz0orFYjzlxn6AJrOQ&"
                 + "origins=" + origins + "&destinations=" + destinations;
         
         //Criando url output a partir de geoinfo
@@ -254,7 +254,6 @@ public class GymBuilder {
             pace++;
         }
         
-        System.out.println("Preco da academia: " + price);
         /// CONSTRÓI A STRING NO FORMATO (0101)
         StringBuilder binary = new StringBuilder();
         binary.append(Integer.toBinaryString(pace-1));

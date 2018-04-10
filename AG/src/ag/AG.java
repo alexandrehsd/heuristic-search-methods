@@ -15,7 +15,7 @@ public class AG {
     public static void main(String[] args) throws IOException, MalformedURLException, JSONException {
         // INICIALIZANDO AS VARIÁVEIS
         int iteracao = 0;
-        Chromosome[] database = new Chromosome[77];
+        Chromosome[] database = new Chromosome[76];
         
         System.out.printf("Descreva qual o valor máximo que você pode pagar, mensalmente, em uma academia: ");
         Scanner input1 = new Scanner(System.in);
@@ -23,7 +23,7 @@ public class AG {
         Chromosome.setpmax(price);
         
         System.out.printf("Descreva com um número inteiro de 1 a 5, o quanto você se importa com a "
-            + "avaliação dos demais usuários acerca das academia: ");
+            + "avaliação dos demais usuários acerca das academias: ");
         Scanner input2 = new Scanner(System.in);
         int rat = input2.nextInt();
         
@@ -53,10 +53,10 @@ public class AG {
         
         Chromosome.setCr(rat);
         System.arraycopy(GymBuilder.Gyms(end, minw, maxw, minwe, maxwe), 
-                0, database, 0, 77);
+                0, database, 0, 76);
 
         System.out.println("BANCO DE DADOS");
-        for(int i=0; i<77; i++){
+        for(int i=0; i<76; i++){
             database[i].show();
             System.out.println("Fitness da academia " + (i+1) + " do banco de dados: " + database[i].getFitness());
         }
@@ -95,37 +95,30 @@ public class AG {
             pop[18] = elites[0];
             pop[19] = elites[1];
             
-            /*
-            System.out.println("VETOR POP ANTES DA MUTACAO");
-            for(int i=0; i<10; i++){
-                pop[i].show();
-                System.out.println("Fitness da academia " + (i+1) + " da pop: " + pop[i].getFitness());
-            }
             // REALIZANDO MUTAÇÃO
-            Random rand = new Random();
-            int index = rand.nextInt(20);
-            pop[index] = Operator.mutation(sons[index]);
-            pop[index].setBits (0, 13, Operator.validate(pop[index], database).getBits(0, 13));
-            pop[index].setFitness();
+//            Random rand = new Random();
+//            int index = rand.nextInt(20);
+//            pop[index] = Operator.mutation(sons[index]);
+//            pop[index].setBits (0, 13, Operator.validate(pop[index], database).getBits(0, 13));
+//            pop[index].setFitness();
             
-            */
             it++;
         }
         pop = Sort.BubbleSort(pop);
-        pop[19].show();
+        System.out.println("");
         System.out.println("Fitness da melhor academia: " + pop[19].getFitness());
         
         int i;
-        for(i=0;i<77;i++){
+        for(i=0;i<76;i++){
             if(Arrays.equals(pop[19].getGenCode(), database[i].getGenCode())){
                 break;
             }
         }
         
-        String placeid = Files.readAllLines(Paths.get("C:/Users/user11/Downloads/AG/placeids.txt")).get(i);
+        String placeid = Files.readAllLines(Paths.get("/home/alexandre/Documentos/GitHub/AI-Algorithms/AG/placeids.txt")).get(i);
         
         String s = "https://maps.googleapis.com/maps/api/place/details/json?"
-                + "key=AIzaSyDzO2vaFozmyuU3rDURfWFRT0pfZfL7bak&placeid=" + placeid;
+                + "key=AIzaSyCwYJvP0YHepfjOIiz0orFYjzlxn6AJrOQ&placeid=" + placeid;
         String str = "";
             
         //criando uma url com a string concatenada
@@ -144,7 +137,7 @@ public class AG {
         System.out.println(obj.getJSONObject("result").getString("name"));
         
         System.out.println(obj.getJSONObject("result").getString("formatted_address"));
-        System.out.println(obj.getJSONObject("result").getString("website"));
+        //System.out.println(obj.getJSONObject("result").getString("website"));
         
         iteracao++;
         }
