@@ -96,11 +96,11 @@ public class AG {
             pop[19] = elites[1];
             
             // REALIZANDO MUTAÇÃO
-//            Random rand = new Random();
-//            int index = rand.nextInt(20);
-//            pop[index] = Operator.mutation(sons[index]);
-//            pop[index].setBits (0, 13, Operator.validate(pop[index], database).getBits(0, 13));
-//            pop[index].setFitness();
+            Random rand = new Random();
+            int index = rand.nextInt(20);
+            pop[index] = Operator.mutation(sons[index]);
+            pop[index].setBits (0, 13, Operator.validate(pop[index], database).getBits(0, 13));
+            pop[index].setFitness();
             
             it++;
         }
