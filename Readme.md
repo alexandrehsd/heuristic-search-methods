@@ -1,4 +1,4 @@
-Here you will find metaheuristics algorithms developed in the course of Applied Artificial Intelligence from the B.Sc. Computer Engineering at Federal University of Rio Grande Do Norte.
+Welcome, here you will find metaheuristics algorithms developed in the course of Applied Artificial Intelligence from the B.Sc. Computer Engineering at Federal University of Rio Grande Do Norte.
 
 The AG repository contains an implementation of an algorithm based in the genetic algorithm. Such implementation aims to help people in the decision-making process about which gym is best for them to begin aerobic and weight training workout in the city of Natal, RN-Brazil. 
 
