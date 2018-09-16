@@ -24,5 +24,5 @@ The appropriate values for these parameters varies from case to case, therefore,
 
 In addition, it is also important to initialiaze the particles in an interval in which you believe that contains the global minima of the function you are analyzing. For the Rosenbrock's function, <i>x</i> and <i>y</i> values of the initial positions starts at the range [0,20]. One can modify all these parameters at the PSO.java file.
 
-Lastly, you can set the function you wish to apply the PSO algorithm in the Evaluation method, which is implemented at the Evaluation.java file. To do this, write your function as the return argument of the Evaluation method, considering that pos[0] and pos[1] represents the <i>x</i> and <i>y</i> values for the coordinates of the particles in a 2-dimensional <i>xy</i> plane.
+Lastly, you can set the function you wish to apply the PSO algorithm in the Evaluation method, which is implemented at the Evaluation.java file. To do this, write your function as the return argument of the Evaluation method, considering that pos[0] and pos[1] represents the <i>x</i> and <i>y</i> values, respectively, for the coordinates of the particles in a 2-dimensional <i>xy</i> plane.
 
