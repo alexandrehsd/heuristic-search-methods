@@ -1,3 +1,5 @@
+<h2>Particle Swarm Optimization</h2>
+
 In this reposity you can find an implementation of the Particles swarm optimization (PSO) algorithm applied in order to find the global minima of any 2-dimensional function. For the sake of clarity and a proper understanding, the function used as an example is the <a href="https://en.wikipedia.org/wiki/Rosenbrock_function">Rosenbrock's Function</a>. It is given by the equation
 
 ![Rosenbrock equation](http://latex.codecogs.com/gif.latex?f%28x%2Cy%29%20%3D%20%28a-x%29%5E2%20&plus;%20b%28y-x%5E2%29%5E2)
@@ -10,7 +12,7 @@ The Rosenbrock's function with these parameters has the following shape:
 
 ![Rosenbrock's function](Rosenbrock_function.png)
 
-Without lack of generalization, one can apply the algorithm to any 2-dimensional function by just modifying some parameters at the source files. Note that the equations for the velocity and the position of the particles at each i-dimension at an instant ![t](http://latex.codecogs.com/gif.latex?%5Cinline%20%5Cdpi%7B150%7D%20%5Csmall%20t%20%3D%20n&plus;1) is given by
+Without loss of generality, one can apply the algorithm to any 2-dimensional function by just modifying some parameters at the source files. Note that the equations for the velocity and the position of the particles at each i-dimension at an instant ![t](http://latex.codecogs.com/gif.latex?%5Cinline%20%5Cdpi%7B150%7D%20%5Csmall%20t%20%3D%20n&plus;1) is given by
 
 ![velocity](http://latex.codecogs.com/gif.latex?%5Cinline%20%5Cdpi%7B150%7D%20%5Csmall%20v_i%28n&plus;1%29%20%3D%20wv_i%28n%29%20&plus;%20%5Crho_%7B1%7DC_1%28p_%7Bbest%7D_%7Bi%7D%28n%29%20-%20pos_%7Bi%7D%28n%29%29%20&plus;%20%5Crho_%7B2%7DC_2%28g_%7Bbest%7D%28n%29%20-%20pos_%7Bi%7D%28n%29%29)
 
